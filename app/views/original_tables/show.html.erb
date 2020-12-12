@@ -1,2 +1,24 @@
 <h1>OriginalTables#show</h1>
 <p>Find me in app/views/original_tables/show.html.erb</p>
+
+<p>名前</p>
+<%= @original_table.name %>
+
+<p>作者</p>
+<%= @original_table.user.email %>
+
+<p>作成日</p>
+<%= @original_table.created_at %>
+
+<p>最終更新日</p>
+<%= @original_table.updated_at %>
+
+<p>内容</p>
+<ul>
+  <% @original_table.elements.each do |element| %>
+    <li><%= element %></li>
+  <% end %>
+</ul>
+
+<p><%= link_to('編集', edit_original_table_path) %></p>
+<p><%= link_to('削除', destroy_original_table_path) %></p>

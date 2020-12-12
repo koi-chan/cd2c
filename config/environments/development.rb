@@ -76,4 +76,7 @@ Rails.application.configure do
 
   # Devise
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
+  # mail send process
+  config.action_mailer.delivery_method = :sendmail
 end

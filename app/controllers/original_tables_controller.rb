@@ -58,6 +58,13 @@ class OriginalTablesController < ApplicationController
       flash[:abort] = t('views.flash.edit_original_table_can_author_only')
       redirect_to(original_table_path(@original_table))
     end
+
+    if(@original_table.destroy)
+      flash[:success] = t('views.flash.deleted_original_table')
+      redirect_to(original_tables_path)
+    else
+      render(:show)
+    end
   end
 
   private

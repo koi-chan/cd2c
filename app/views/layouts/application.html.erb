@@ -7,25 +7,12 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
-  <body>
-    <header>
-      <nav>
-        <% if user_signed_in? %>
-	  <%= link_to('編集', edit_user_registration_path) %>
-	  <%= link_to('ログアウト', destroy_user_session_path, method: :delete) %>
-        <% else %>
-          <%= link_to('サインアップ', new_user_registration_path) %>
-	  <%= link_to('ログイン', new_user_session_path) %>
-        <% end %>
-      </nav>
-    </header>
-
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
-
-    <%= yield %>
+  <body data-controller="<%= controller.controller_path %>" data-action="<%= controller.action_name %>">
+    <%= render('shared/navbar') %>
+<%= yield %>
   </body>
 </html>

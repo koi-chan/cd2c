@@ -15,7 +15,7 @@
     <% @original_tables.each do |original_table| %>
       <tr>
         <td><%= link_to(original_table.name, original_table) %></td>
-        <td><%= link_to(original_table.user.email) %></td>
+        <td><%= original_table.user.username %></td>
         <td><%= original_table.updated_at %></td>
       </tr>
     <% end %>

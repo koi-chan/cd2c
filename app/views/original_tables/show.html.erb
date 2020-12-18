@@ -1,24 +1,50 @@
-<h1>OriginalTables#show</h1>
-<p>Find me in app/views/original_tables/show.html.erb</p>
+<div class="container main-container">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="main-panel">
+        <div class="panel-body">
+          <%= render('shared/flash') %>
 
-<p>名前</p>
-<%= @original_table.name %>
+          <div class="page-header">
+            <h1>オリジナル表情報</h1>
+          </div>
 
-<p>作者</p>
-<%= @original_table.user.username %>
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <th>名前</th>
+                <td><%= @original_table.name %></td>
+              </tr>
+              <tr>
+                <th>作者</th>
+                <td><%= @original_table.user.username %></td>
+              </tr>
+              <tr>
+                <th>作成日</th>
+                <td><%= @original_table.created_at %></td>
+              </tr>
+              <tr>
+                <th>最終更新日</th>
+                <td><%= @original_table.updated_at %></td>
+              </tr>
+            </tbody>
+          </table>
 
-<p>作成日</p>
-<%= @original_table.created_at %>
+          <h2>表の中身</h2>
+          <table class="table table-striped">
+            <tbody>
+              <% @original_table.elements.each do |element| %>
+                <tr><td><%= element %></td></tr>
+              <% end %>
+            </tbody>
+          </table>
 
-<p>最終更新日</p>
-<%= @original_table.updated_at %>
-
-<p>内容</p>
-<ul>
-  <% @original_table.elements.each do |element| %>
-    <li><%= element %></li>
-  <% end %>
-</ul>
-
-<p><%= link_to('編集', edit_original_table_path) %></p>
-<p><%= link_to('削除', original_table_path, method: :delete) %></p>
+          <p>
+            <%= link_to('編集', edit_original_table_path, class: 'btn btn-responsible btn-default') %>
+            <%= link_to('削除', original_table_path, method: :delete, class: 'btn btn-responsible btn-default') %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

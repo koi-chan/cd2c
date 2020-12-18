@@ -1,4 +1,17 @@
-<h1>OriginalTables#edit</h1>
-<p>Find me in app/views/original_tables/edit.html.erb</p>
+<div class="container main-container">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="main-panel">
+        <div class="panel-body">
+          <%= render('shared/flash') %>
 
-<%= render('form', name_changeable: false) %>
+          <div class="page-header">
+            <h1>オリジナル表編集</h1>
+          </div>
+
+          <%= render('form', name_changeable: false) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

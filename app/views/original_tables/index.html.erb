@@ -1,23 +1,38 @@
-<h1>オリジナル表一覧</h1>
-<p>Find me in app/views/original_tables/index.html.erb</p>
+<div class="container main-container">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="main-panel">
+        <div class="panel-body">
+          <%= render('shared/flash') %>
 
-<%= link_to('新規作成', new_original_table_path) %>
+          <div class="page-header">
+            <h1>オリジナル表</h1>
+          </div>
 
-<table>
-  <thead>
-    <tr>
-      <th>名前</th>
-      <th>作者</th>
-      <th>最終更新日</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @original_tables.each do |original_table| %>
-      <tr>
-        <td><%= link_to(original_table.name, original_table) %></td>
-        <td><%= original_table.user.username %></td>
-        <td><%= original_table.updated_at %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+          <p>
+            <%= link_to('新規作成', new_original_table_path, class: 'btn btn-responsible btn-default') %>
+          </p>
+
+          <table class="table table-striped original-table-list">
+            <thead>
+              <tr>
+                <th>名前</th>
+                <th>作者</th>
+                <th>最終更新日</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @original_tables.each do |original_table| %>
+                <tr>
+                  <td><%= link_to(original_table.name, original_table) %></td>
+                  <td><%= original_table.user.username %></td>
+                  <td><%= original_table.updated_at %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -34,6 +34,9 @@ gem 'pry-rails'
 # 認証システム
 gem 'devise'
 
+# チャットシステムとの連携に使うトークンを生成する
+gem 'securerandom'
+
 gem 'uglifier'
 gem 'jquery-rails'
 gem 'bootstrap'

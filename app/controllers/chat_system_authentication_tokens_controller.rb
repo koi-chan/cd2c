@@ -3,7 +3,7 @@ class ChatSystemAuthenticationTokensController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @token_records = ChatSystemAuthenticationToken.find(user: current_user)
+    @token_records = current_user.chat_system_authentication_tokens
   end
 
   def new

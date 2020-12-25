@@ -37,6 +37,13 @@ gem 'devise'
 # チャットシステムとの連携に使うトークンを生成する
 gem 'securerandom'
 
+# チャットボットのフレームワーク
+gem 'lumberjack'
+gem 'sysexits'
+
+# Discord 接続用のフレームワーク
+gem 'discordrb'
+
 gem 'uglifier'
 gem 'jquery-rails'
 gem 'bootstrap'

@@ -71,25 +71,9 @@ module Cd2c
           # Discordrb 内部処理用のログモードを選択・設定
           bot.mode = log_level[:base]
 
-          # バージョン情報を返すコマンド
-          bot.message(contains: /^\.version/) do |event|
-            unless event.user.current_bot?
-              event << "#{event.user.mention} RGRB #{RGRB::VERSION_WITH_COMMIT_ID}"
-            end
-          end
-
-          bot.server_create do |event|
-            event.server.default_channel.send_message('招待されました')
-            u = event.server.members.select do |member|
-              member.username == 'koi-chan'
-              member.username == 'koi-chan#5021'
-            end
-            u.first.pm("招待した？ #{u.first.name}")
-          end
-
           # 独自実装のプラグイン機能を読み込む
           discord_adapters.each do |adapter|
-            adapter.new(bot, (plugin_options[adapter] || {}), logger)
+            adapter.new(bot, (plugin_options[adapter] || {}), @logger)
           end
 
           @logger.warn('ボットが生成されました')

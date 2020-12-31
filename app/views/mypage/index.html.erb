@@ -1,2 +1,13 @@
-<h1>Mypage#index</h1>
-<p>Find me in app/views/mypage/index.html.erb</p>
+<h1><%= @user.username %></h1>
+<p>メールアドレス: <%= @user.email %>
+<ul>
+  <% @user.discord_links.each do |link| %>
+    <li><%= link.server_id %> / <%= link.account_id %></li>
+  <% end %>
+</ul>
+
+<ul>
+  <% @user.chat_system_authentication_tokens.each do |token| %>
+    <li><%= token.token %></li>
+  <% end %>
+</ul>

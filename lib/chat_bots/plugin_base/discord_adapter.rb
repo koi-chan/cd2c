@@ -159,7 +159,8 @@ module Cd2c
           @config = options
           @logger = logger
           @thread_group = ThreadGroup.new
-          @mutex = Mutex.new
+          @semaphores_mutex = Mutex.new
+          @semaphores = Hash.new { |h, k| h[k] = Mutex.new }
 
           __register_matchers
         end
@@ -227,6 +228,16 @@ module Cd2c
           log_send_channel(target, _message)
         end
 
+        # スレッドを同期実行する
+        # @see: https://github.com/cinchrb/cinch/blob/master/lib/cinch/bot.rb#L159
+        # @param [String, Symbol] name 同時実行するブロックの名前
+        # @return [void]
+        # @yield 同期実行する処理
+        def synchronize(name, &block)
+          semaphore = @semaphores_mutex.synchronize { @semaphores[name] }
+          semaphore.synchronize(&block)
+        end
+
         # ログを出力させる
         # @param [String] content 出力するイベント
         # @param [Symbol] type ログの種類
@@ -242,7 +253,7 @@ module Cd2c
             content
           end
 
-          @mutex.synchronize do
+          synchronize(:log) do
             message.each_line do |line|
               @logger.add(level, line)
             end

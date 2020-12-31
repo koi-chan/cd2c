@@ -5,6 +5,10 @@ module Cd2c
     module PluginBase
       # アダプターの共通モジュール
       module Adapter
+        # データベース接続制御
+        # マルチスレッド同期実行(DiscordAdapter#synchronize)の分類に使用する
+        RECORD_MESSAGE = :record_message
+
         private
 
         # 生成器を用意し、設定を転送する

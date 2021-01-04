@@ -1,9 +1,13 @@
 # vim: fileencoding=utf-8
 
+require_relative 'common'
+
 module Cd2c
   module ChatBots
     module PluginBase
       module Generator
+        include Common
+
         # 既定のロガー
         # @return [Lumberjack::Logger]
         DEFAULT_LOGGER = Lumberjack::Logger.new(
@@ -29,6 +33,8 @@ module Cd2c
         #
         # 設定関連のメソッドが動作するように変数を設定する。
         def initialize
+          super
+
           class_name_tree = self.class.name.split('::')
           @plugin_name_underscore = class_name_tree[-2].underscore
           @logger = DEFAULT_LOGGER

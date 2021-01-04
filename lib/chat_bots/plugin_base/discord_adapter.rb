@@ -6,6 +6,8 @@ module Cd2c
   module ChatBots
     module PluginBase
       module DiscordAdapter
+        include Adapter
+
         module ClassMethods
           # [String] プラグイン名
           attr_reader :plugin_name
@@ -146,7 +148,6 @@ module Cd2c
         # 共通で使用する他のモジュールを読み込む
         def self.included(by)
           by.extend(ClassMethods)
-          by.include(Adapter)
         end
 
         # コンストラクタ
@@ -159,8 +160,8 @@ module Cd2c
           @config = options
           @logger = logger
           @thread_group = ThreadGroup.new
-          @semaphores_mutex = Mutex.new
-          @semaphores = Hash.new { |h, k| h[k] = Mutex.new }
+
+          super
 
           __register_matchers
         end
@@ -221,21 +222,11 @@ module Cd2c
           message = Array(message) if message.kind_of?(String)
 
           _message = message.map do |line|
-            message = "#{header}#{line}"
+            "#{header}#{line}"
           end.join("\n")
 
           target.send_message(_message)
           log_send_channel(target, _message)
-        end
-
-        # スレッドを同期実行する
-        # @see: https://github.com/cinchrb/cinch/blob/master/lib/cinch/bot.rb#L159
-        # @param [String, Symbol] name 同時実行するブロックの名前
-        # @return [void]
-        # @yield 同期実行する処理
-        def synchronize(name, &block)
-          semaphore = @semaphores_mutex.synchronize { @semaphores[name] }
-          semaphore.synchronize(&block)
         end
 
         # ログを出力させる

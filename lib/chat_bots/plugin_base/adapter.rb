@@ -1,13 +1,21 @@
 # vim: fileencoding=utf-8
 
+require_relative 'common'
+
 module Cd2c
   module ChatBots
     module PluginBase
       # アダプターの共通モジュール
       module Adapter
+        include Common
+
         # データベース接続制御
         # マルチスレッド同期実行(DiscordAdapter#synchronize)の分類に使用する
         RECORD_MESSAGE = :record_message
+
+        def initialize(*)
+          super
+        end
 
         private
 

@@ -23,8 +23,7 @@ module Cd2c
           def random_drow(table_name)
             table = check_existence_of(table_name)
 
-            contents = table.definition.split
-            contents.sample(random: @random)
+            table.elements.sample(random: @random)
           end
 
           private

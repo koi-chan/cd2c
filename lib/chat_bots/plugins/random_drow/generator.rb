@@ -10,12 +10,6 @@ module Cd2c
         class Generator
           include PluginBase::Generator
 
-          def initialize
-            super
-
-            @random = Random.new
-          end
-
           # ランダムに1項目をオリジナル表から引き、結果を返す
           # @param [String] table_name 表名
           # @return [String]
@@ -23,7 +17,7 @@ module Cd2c
           def random_drow(table_name)
             table = check_existence_of(table_name)
 
-            table.elements.sample(random: @random)
+            table.drow
           end
 
           private

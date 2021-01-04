@@ -13,7 +13,7 @@ module Cd2c
           include PluginBase::DiscordAdapter
 
           set(plugin_name: 'RandomDrow')
-          self.prefix = '.deck'
+          self.prefix = '.random'
 
           match(/[ 　]([a-zA-Z0-9_]+)/, method: :random_drow)
 

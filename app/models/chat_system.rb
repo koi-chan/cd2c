@@ -1,0 +1,2 @@
+class ChatSystem < ApplicationRecord
+end

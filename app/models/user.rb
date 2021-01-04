@@ -6,5 +6,5 @@ class User < ApplicationRecord
          :trackable, :confirmable
 
   has_many :chat_system_authentication_tokens
-  has_many :discord_links
+  has_many :chat_system_links
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_21_125824) do
+ActiveRecord::Schema.define(version: 2021_01_04_215807) do
 
   create_table "chat_system_authentication_tokens", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -20,13 +20,21 @@ ActiveRecord::Schema.define(version: 2020_12_21_125824) do
     t.index ["user_id"], name: "index_chat_system_authentication_tokens_on_user_id"
   end
 
-  create_table "discord_links", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "chat_system_links", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "server_id", null: false
     t.bigint "account_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_discord_links_on_user_id"
+    t.bigint "chat_system_id", null: false
+    t.index ["chat_system_id"], name: "index_chat_system_links_on_chat_system_id"
+    t.index ["user_id"], name: "index_chat_system_links_on_user_id"
+  end
+
+  create_table "chat_systems", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "original_tables", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -62,6 +70,7 @@ ActiveRecord::Schema.define(version: 2020_12_21_125824) do
   end
 
   add_foreign_key "chat_system_authentication_tokens", "users"
-  add_foreign_key "discord_links", "users"
+  add_foreign_key "chat_system_links", "chat_systems"
+  add_foreign_key "chat_system_links", "users"
   add_foreign_key "original_tables", "users"
 end

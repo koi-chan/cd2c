@@ -1,7 +1,7 @@
 <h1><%= @user.username %></h1>
 <p>メールアドレス: <%= @user.email %>
 <ul>
-  <% @user.discord_links.each do |link| %>
+  <% @user.chat_system_links.each do |link| %>
     <li><%= link.server_id %> / <%= link.account_id %></li>
   <% end %>
 </ul>

@@ -7,15 +7,15 @@ require_relative 'table_not_found'
 module Cd2c
   module ChatBots
     module Plugin
-      # オリジナル表からカードデッキとして引く
-      module Deck
+      # オリジナル表からランダムに1項目を引く
+      module RandomDrow
         class DiscordAdapter
           include PluginBase::DiscordAdapter
 
-          set(plugin_name: 'Deck')
+          set(plugin_name: 'RandomDrow')
           self.prefix = '.deck'
 
-          match(/[ 　]([a-zA-Z0-9_]+)/, method: :deck)
+          match(/[ 　]([a-zA-Z0-9_]+)/, method: :random_drow)
 
           def initialize(*)
             super
@@ -26,12 +26,12 @@ module Cd2c
           # カードを引くコマンドに反応する
           # @param [Event] m
           # @return [void]
-          def deck(m, table_names)
+          def random_drow(m, table_names)
             log_incoming(m)
 
             messages = table_names.split(' ').map do |table|
               begin
-                @generator.deck(table).
+                @generator.random_drow(table).
                   split($/).
                   map { |line| "<#{table}>: #{line}" }
               rescue TableNotFound => not_found_error
@@ -41,7 +41,7 @@ module Cd2c
                 '原因不明のエラーが発生しました'
               end
             end
-pp messages
+
             send_channel(m.channel, messages.flatten, "deck[#{m.user.mention}] ")
           end
         end

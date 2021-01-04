@@ -3,7 +3,7 @@
 module Cd2c
   module ChatBots
     module Plugin
-      module Deck
+      module RandomDrow
         class TableNotFound < StandardError
           # 見つからなかった表名
           # @return [String]

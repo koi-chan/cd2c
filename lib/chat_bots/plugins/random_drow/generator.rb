@@ -6,7 +6,7 @@ module Cd2c
   module ChatBots
     module Plugin
       # オリジナル表からカードデッキとして引く
-      module Deck
+      module RandomDrow
         class Generator
           include PluginBase::Generator
 
@@ -16,11 +16,11 @@ module Cd2c
             @random = Random.new
           end
 
-          # カードデッキ方式でオリジナル表を引き、結果を返す
+          # ランダムに1項目をオリジナル表から引き、結果を返す
           # @param [String] table_name 表名
           # @return [String]
           # @raise [TableNotFound] 表が見つからなかった場合
-          def deck(table_name)
+          def random_drow(table_name)
             table = check_existence_of(table_name)
 
             contents = table.definition.split

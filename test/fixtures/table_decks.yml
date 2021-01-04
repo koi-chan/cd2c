@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  chat_system: one
+  server_id: 
+  channel_id: 
+  original_table: one
+  rest_contents: 
+
+two:
+  chat_system: two
+  server_id: 
+  channel_id: 
+  original_table: two
+  rest_contents: 

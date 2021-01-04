@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_04_215807) do
+ActiveRecord::Schema.define(version: 2021_01_04_224405) do
 
   create_table "chat_system_authentication_tokens", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -46,6 +46,18 @@ ActiveRecord::Schema.define(version: 2021_01_04_215807) do
     t.index ["user_id"], name: "index_original_tables_on_user_id"
   end
 
+  create_table "table_decks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "chat_system_id", null: false
+    t.bigint "server_id", null: false
+    t.bigint "channel_id"
+    t.bigint "original_table_id", null: false
+    t.text "rest_contents", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["chat_system_id"], name: "index_table_decks_on_chat_system_id"
+    t.index ["original_table_id"], name: "index_table_decks_on_original_table_id"
+  end
+
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -73,4 +85,6 @@ ActiveRecord::Schema.define(version: 2021_01_04_215807) do
   add_foreign_key "chat_system_links", "chat_systems"
   add_foreign_key "chat_system_links", "users"
   add_foreign_key "original_tables", "users"
+  add_foreign_key "table_decks", "chat_systems"
+  add_foreign_key "table_decks", "original_tables"
 end

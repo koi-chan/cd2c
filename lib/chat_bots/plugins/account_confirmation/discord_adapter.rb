@@ -65,10 +65,11 @@ module Cd2c
           end
 
           def authentication_account_with_token(m, token)
-            link = DiscordLink.new
+            link = ChatSystemLink.new
             link.user = token.user
             link.server_id = m.server.id
             link.account_id = m.user.id
+            link.chat_system = ChatSystem.find_by(name: :discord)
 
             synchronize(RECORD_MESSAGE) do
               ApplicationRecord.connection_pool.with_connection do

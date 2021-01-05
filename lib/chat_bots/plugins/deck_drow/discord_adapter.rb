@@ -19,7 +19,7 @@ module Cd2c
           match(/-init[ 　]([a-zA-Z0-9_]+)/, method: :init_deck)
           match(/-init-server[ 　]([a-zA-Z0-9_]+)/, method: :init_deck)
           match(/-init-channel[ 　]([a-zA-Z0-9_]+)/, method: :init_deck_channel)
-          match(/[ 　]([a-zA-Z0-9_]+)/, method: :drow)
+          match(/[ 　]+([a-zA-Z0-9_]+)(?:[ 　]+(\d+))?/, method: :drow)
 
           def initialize(*)
             super
@@ -68,14 +68,15 @@ module Cd2c
           # @param [String] table_name カードを引く山札
           # @param [Integer, String] count カードを引く枚数
           # @return [void]
-          def drow(m, table_name, count = 1)
+          def drow(m, table_name, count)
             log_incoming(m)
 
             header = "deck[#{m.user.mention}] "
+            count = count.nil? ? 1 : count.to_i
 
             messages =
               begin
-                result = Array.new(count.to_i).map do
+                result = Array.new(count).map do
                   @generator.drow(table_name, m.server.id, m.channel.id)
                 end
                 if result.include?(nil)

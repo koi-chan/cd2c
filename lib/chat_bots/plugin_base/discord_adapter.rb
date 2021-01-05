@@ -216,17 +216,20 @@ module Cd2c
 
         # メッセージをチャンネルに送信する
         # @param [Discordrb::Channel] target 送信先
-        # @param [String, Array] message メッセージ
+        # @param [String, Array] i_message 送信するメッセージ
         # @return [void]
-        def send_channel(target, message, header = '')
-          message = Array(message) if message.kind_of?(String)
+        def send_channel(target, i_message, header = '')
+          i_message = [i_message] if i_message.kind_of?(String)
 
-          _message = message.map do |line|
-            "#{header}#{line}"
-          end.join("\n")
+          messages = i_message.map do |line|
+            "#{header}#{line}" if line.length > 0
+          end.compact
+          return if messages.empty?
 
-          target.send_message(_message)
-          log_send_channel(target, _message)
+          o_message = messages.join("\n")
+
+          target.send_message(o_message)
+          log_send_channel(target, o_message)
         end
 
         # ログを出力させる

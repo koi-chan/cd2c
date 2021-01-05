@@ -42,7 +42,7 @@ module Cd2c
               end
             end
 
-            send_channel(m.channel, messages.flatten, "deck[#{m.user.mention}] ")
+            send_channel(m.channel, messages.flatten, "random[#{m.user.mention}] ")
           end
         end
       end

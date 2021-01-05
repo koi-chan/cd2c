@@ -4,7 +4,7 @@ module Cd2c
   module ChatBots
     module Plugin
       module DeckDrow
-        class TableNotFound < StandardError
+        class OriginalTableNotFound < StandardError
           # 見つからなかった表名
           # @return [String]
           attr_reader :table

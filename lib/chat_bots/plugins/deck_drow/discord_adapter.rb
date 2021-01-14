@@ -16,10 +16,18 @@ module Cd2c
           set(plugin_name: 'DeckDrow')
           self.prefix = '.deck'
 
+          # 山札を準備する
           match(/-init[ 　]([a-zA-Z0-9_]+)/, method: :init_deck)
-          match(/-init-server[ 　]([a-zA-Z0-9_]+)/, method: :init_deck)
-          match(/-init-channel[ 　]([a-zA-Z0-9_]+)/, method: :init_deck_channel)
+          match(/-init-channel[ 　]([a-zA-Z0-9_]+)/, method: :init_deck)
+          match(/-init-server[ 　]([a-zA-Z0-9_]+)/, method: :init_deck_server)
+
+          # 山札からカードを引く
           match(/[ 　]+([a-zA-Z0-9_]+)(?:[ 　]+(\d+))?/, method: :drow)
+
+          # 山札を片付ける
+          match(/-clean[ 　]([a-zA-Z0-9_]+)/, method: :clean_deck)
+          match(/-clean-channel[ 　]([a-zA-Z0-9_]+)/, method: :clean_deck)
+          match(/-clean-server[ 　]([a-zA-Z0-9_]+)/, method: :clean_deck_server)
 
           def initialize(*)
             super
@@ -30,36 +38,26 @@ module Cd2c
           # 山札を準備する
           # @param [Event] m
           # @param [String] table_name 山札を準備するオリジナル表
-          # @param [Boolean] channel_only チャンネル限定の山札にする
-          #   デフォルトではサーバ内の全チャンネルで山札は共通になる
+          # @param [Boolean] server_wide サーバ共通の山札にする
           # @return [void]
-          def init_deck(m, table_name, channel_only = false)
+          def init_deck(m, table_name, server_wide = false)
             log_incoming(m)
 
-            message =
-              begin
-                @generator.init_deck(
-                  table_name,
-                  m.server.id,
-                  channel_only ? m.channel.id : 0
-                )
-              rescue OriginalTableNotFound => not_found_error
-                ": オリジナル表「#{not_found_error.table}」が見つかりません"
-              rescue TableDeckNotFound => not_found_error
-                ": 山札「#{not_found_error.table}」が見つかりません"
-              rescue => e
-                log_exception(e)
-                '原因不明のエラーが発生しました'
-              end
+            result =
+              @generator.init_deck(
+                table_name,
+                m.server.id,
+                server_wide ? 0 : m.channel.id
+              )
 
-            send_channel(m.channel, message, "deck-init[#{m.user.mention}]: ")
+            send_channel(m.channel, result.messages, "deck-init[#{m.user.mention}]<#{table_name}>(#{result.header}): ")
           end
 
-          # チャンネル限定の山札を準備する
+          # サーバ共通の山札を準備する
           # @param [Event] m
           # @param [String] table_name 山札を準備するオリジナル表
           # @return [void]
-          def init_deck_channel(m, table_name)
+          def init_deck_server(m, table_name)
             init_deck(m, table_name, true)
           end
 
@@ -71,30 +69,45 @@ module Cd2c
           def drow(m, table_name, count)
             log_incoming(m)
 
-            header = "deck[#{m.user.mention}] "
+            header = "deck[#{m.user.mention}]<#{table_name}>"
             count = count.nil? ? 1 : count.to_i
 
-            messages =
-              begin
-                result = Array.new(count).map do
-                  @generator.drow(table_name, m.server.id, m.channel.id)
-                end
-                if result.include?(nil)
-                  result =
-                    result.compact << '山札にカードが残っていません'
-                end
-                header = "#{header}<#{table_name}>: "
-                result
-            rescue OriginalTableNotFound => not_found_error
-              ": オリジナル表「#{not_found_error.table}」が見つかりません"
-            rescue TableDeckNotFound => not_found_error
-              ": 山札「#{not_found_error.table}」が見つかりません"
-            rescue => e
-              log_exception(e)
-              '原因不明のエラーが発生しました'
-            end
+            return if count < 1
 
-            send_channel(m.channel, messages, header)
+            result = @generator.drow(table_name, m.server.id, m.channel.id, count)
+
+            send_channel(
+              m.channel,
+              result.messages,
+              header +
+                (result.header ? "(#{result.header}): " : ": ")
+            )
+          end
+
+          # 山札を片付ける
+          # @param [Event] m
+          # @param [String] table_name 山札の元になったオリジナル表の名前
+          # @param [Boolean] server_wide サーバ共通の山札を対象にする
+          # @return [void]
+          def clean_deck(m, table_name, server_wide = false)
+            log_incoming(m)
+
+            result =
+              @generator.clean_deck(
+                table_name,
+                m.server.id,
+                server_wide ? 0 : m.channel.id
+              )
+
+            send_channel(m.channel, result.messages, "deck-clean[#{m.user.mention}]<#{table_name}>(#{result.header}): ")
+          end
+
+          # サーバ共通の山札を片付ける
+          # @param [Event] m
+          # @param [String] table_name 山札の元になったオリジナル表の名前
+          # @return [void]
+          def clean_deck_server(m, table_name)
+            clean_deck(m, table_name, true)
           end
         end
       end

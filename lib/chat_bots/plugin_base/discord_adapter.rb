@@ -219,7 +219,9 @@ module Cd2c
         # @param [String, Array] i_message 送信するメッセージ
         # @return [void]
         def send_channel(target, i_message, header = '')
-          i_message = [i_message] if i_message.kind_of?(String)
+          i_message = [i_message].compact unless i_message.kind_of?(Array)
+
+          return if i_message.size < 1
 
           messages = i_message.map do |line|
             "#{header}#{line}" if line.length > 0

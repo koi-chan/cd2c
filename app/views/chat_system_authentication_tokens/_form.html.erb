@@ -1,0 +1,10 @@
+<%= form_with(model: @token_record) do |f| %>
+  <div class="form-group">
+    <%= f.label(:chat_system_id) %>
+    <%= f.select(:chat_system_id, @chat_systems.map {|c| [c.name, c.id] }, class: 'form-control', required: true) %>
+  </div>
+
+  <div class="form-group">
+    <%= f.submit(t('views.save')) %>
+  </div>
+<% end %>

@@ -10,13 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_04_224405) do
+ActiveRecord::Schema.define(version: 2021_01_27_081357) do
 
   create_table "chat_system_authentication_tokens", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "token", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "chat_system_id", null: false
+    t.index ["chat_system_id"], name: "index_chat_system_authentication_tokens_on_chat_system_id"
     t.index ["user_id"], name: "index_chat_system_authentication_tokens_on_user_id"
   end
 

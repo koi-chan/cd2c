@@ -16,6 +16,29 @@ module Cd2c
         @logger = logger
       end
 
+      # 任意のコマンドをボットの StatusServer に送信する
+      # @param [String] command 送信するコマンド
+      # @param [Numeric] timeout_s タイムアウトまでの秒数
+      # @return [String]
+      def fetch(command, timeout_s)
+        json = Timeout.timeout(timeout_s) do
+          UNIXSocket.open(@socket_path) do |socket|
+            socket.puts(command)
+            response = socket.gets
+            socket.shutdown
+
+            response
+          end
+        end
+
+        response_hash = JSON.parse(json, symbolize_names: true)
+        unless response_hash.dig(:ok)
+          raise response_hash.dig(:error)
+        end
+
+        response_hash.dig(:result)
+      end
+
       # IRCボットの現在の状態を取得する
       # @param [Numeric] timeout_s タイムアウトまでの秒数
       # @return [Hash]

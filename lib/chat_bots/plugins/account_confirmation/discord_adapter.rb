@@ -6,6 +6,9 @@ module Cd2c
   module ChatBots
     module Plugin
       # アカウント連携確認を行なう
+      # @ToDo: 現在はチャットから来た情報を鵜呑みにする
+      #   しかし、総当たりでトークンを入力されたときのために、
+      #   該当するトークンの持ち主にメールで確認をした方が良いはず
       module AccountConfirmation
         class DiscordAdapter
           include PluginBase::DiscordAdapter
@@ -45,13 +48,14 @@ module Cd2c
 
           private
 
+          # トークンを検索する
           # @param [String] token
           # @return [ChatSystemAuthenticationToken]
           def check_token(token)
             tokens = []
             synchronize(RECORD_MESSAGE) do
               ApplicationRecord.connection_pool.with_connection do
-                tokens = ChatSystemAuthenticationToken.where(token: token)
+                tokens = ChatSystemAuthenticationToken.get(token: token)
               end
             end
 
@@ -64,6 +68,10 @@ module Cd2c
             end
           end
 
+          # トークンとアカウントを紐付ける
+          # @param [Event] m
+          # @param [ChatSystemAuthenticationToken] token
+          # @return [void]
           def authentication_account_with_token(m, token)
             link = ChatSystemLink.new
             link.user = token.user

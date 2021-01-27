@@ -33,6 +33,8 @@ gem 'pry-rails'
 
 # 認証システム
 gem 'devise'
+gem 'devise-i18n'
+gem 'devise-i18n-views'
 
 # チャットシステムとの連携に使うトークンを生成する
 gem 'securerandom'

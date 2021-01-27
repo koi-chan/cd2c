@@ -21,13 +21,13 @@ class ChatSystemAuthenticationToken < ApplicationRecord
     tokens = tokens.where(user_id: user_id) unless user_id.nil?
   end
 
-  def limit
+  def expire_at
     self.created_at + 60 * 60 * TOKEN_EXPIRE_HOURS
   end
 
   private
 
-  # トークンを生成します。
+  # トークンを生成する
   # @return [self]
   def generate_token
     self.token = SecureRandom.alphanumeric(32)

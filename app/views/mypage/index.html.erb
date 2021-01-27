@@ -39,7 +39,7 @@
       <tr>
         <td><%= token.chat_system.name %></td>
         <td><input type="text" value="<%= token.token %>"></td>
-        <td><%= token.limit %></td>
+        <td><%= token.expire_at %></td>
         <td><%= link_to('削除', chat_system_authentication_token_path(token), method: :delete) %></td>
       </tr>
     <% end %>

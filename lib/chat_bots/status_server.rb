@@ -12,28 +12,49 @@ module Cd2c
       # 応答生成処理
       # @type [Hash<String, Proc>]
       RESPONSE_GENERATOR = {
-        'ping' => -> {
+        'ping' => ->(*) {
           {
             ok: true,
             result: 'pong'
           }
         },
 
-        'status' => -> {
+        'status' => ->(*) {
           {
             ok: true,
             result: Rails.application.config.app_status.to_h
+          }
+        },
+
+        'server' => ->(my, server_id) {
+          result = my.bot.servers[server_id&.to_i]&.name
+          {
+            ok: !result.nil?,
+            result: result
+          }
+        },
+
+        'user' => ->(my, options) {
+          server_id, user_id = options.split(/ +/).map { |v| v.to_i }
+          result = my.bot.servers[server_id]&.member(user_id)&.name
+          {
+            ok: !result.nil?,
+            result: result
           }
         }
       }.freeze
 
       # サーバを初期化する
+      # @param [Discordrb::Commands::CommandBot] bot
       # @param [String] socket_path ソケットファイルのパス
       # @param [Object] logger ロガー
-      def initialize(socket_path, logger)
+      def initialize(bot, socket_path, logger)
+        @bot = bot
         @socket_path = socket_path
         @logger = logger
       end
+
+      attr_reader :bot
 
       # サーバスレッドを開始する
       # @param [IO] signal_io_r シグナル関連コマンドの読み取り用IO
@@ -53,13 +74,18 @@ module Cd2c
       # @param [String] command コマンド
       # @return [Hash]
       def response_to(command)
-        command_hash = { command: command }
-        response_generator = RESPONSE_GENERATOR[command]
+        parsed_command = command.match(/([\w]+)(?: +(.+)|)/)
+        command_hash = {
+          command: parsed_command[1],
+          query: command,
+          options: parsed_command[2]
+        }
+        response_generator = RESPONSE_GENERATOR[command_hash[:command]]
 
         # コマンドに対応する処理があればそれを呼び出して結果を受け取り、
         # なければ無効なコマンドであることを示す応答とする
         response_body =
-          response_generator&.call || response_to_invalid_command(command)
+          response_generator&.call(self, command_hash[:options]) || response_to_invalid_command(command)
 
         command_hash.merge(response_body)
       end

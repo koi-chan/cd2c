@@ -28,17 +28,18 @@ module Cd2c
             config, discord_adapters
           )
 
+          bot = new_bot(
+            config, discord_adapters, plugin_options, log_level
+          )
+
           status_server = StatusServer.new(
+            bot,
             Rails.application.config.bot_status.socket_path,
             @logger
           )
           status_server_signal_io_r, status_server_signal_io_w = IO.pipe
           status_server_thread =
             status_server.start_thread(status_server_signal_io_r)
-
-          bot = new_bot(
-            config, discord_adapters, plugin_options, log_level
-          )
 
           set_signal_handler(bot, status_server_signal_io_w)
 

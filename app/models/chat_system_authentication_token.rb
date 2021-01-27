@@ -13,16 +13,17 @@ class ChatSystemAuthenticationToken < ApplicationRecord
   def self.get(token: nil, user_id: nil)
     raise(ArgumentError) if token.nil? && user_id.nil?
 
-    now = Time.now
     tokens = self.
-      where(created_at: Range.new(now - 60 * 60 * TOKEN_EXPIRE_HOURS, now))
+      where(created_at: Range.new(TOKEN_EXPIRE_HOURS.hours.before, Time.now))
 
     tokens = tokens.where(token: token) unless token.nil?
     tokens = tokens.where(user_id: user_id) unless user_id.nil?
   end
 
+  # トークンの有効期限
+  # @return [ActiveSupport::TimeWithZone]
   def expire_at
-    self.created_at + 60 * 60 * TOKEN_EXPIRE_HOURS
+    self.created_at + TOKEN_EXPIRE_HOURS.hours
   end
 
   private

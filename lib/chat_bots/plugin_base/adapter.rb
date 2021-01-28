@@ -23,12 +23,16 @@ module Cd2c
         # @return [true]
         def prepare_generator
           class_name_tree = self.class.name.split('::')
+
+          adapter_target = class_name_tree[-1].slice(0..-8).downcase
+
           class_name_tree[-1] = 'Generator'
           generator_class = Object.const_get(class_name_tree.join('::'))
           @generator = generator_class.new
 
           @generator.config_id = config.id
           @generator.root_path = config.root_path
+          @generator.adapter_target = adapter_target
 
           # TODO: プラグインでのテキスト生成関連のログを専用のロガーで出力できる
           # ようにする

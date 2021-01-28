@@ -25,6 +25,10 @@ module Cd2c
         # プラグインで使うデータを格納するディレクトリのパス
         # @return [String]
         attr_accessor :data_path
+        # 呼び出し元のアダプターのチャット環境
+        # @return [String]
+        # @note 小文字のスネークケース
+        attr_accessor :adapter_target
         # ロガー
         # @return [Lumberjack::Logger]
         attr_accessor :logger

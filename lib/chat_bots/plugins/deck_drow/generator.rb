@@ -31,7 +31,7 @@ module Cd2c
                   ApplicationRecord.connection_pool.with_connection do
                     table_deck = TableDeck.find_or_initialize_by(
                       original_table: original_table,
-                      chat_system: ChatSystem.find_by(name: :discord),
+                      chat_system: ChatSystem.find_by(name: @adapter_target),
                       server_id: server_id,
                       channel_id: channel_id
                     )
@@ -66,36 +66,37 @@ module Cd2c
           def drow(table_name, server_id, channel_id, count = 1)
             result = DeckDrowResult.new
 
-            result.messages =
-              begin
-                original_table = check_original_table_existence_of(table_name)
-                table_decks = check_table_deck_existence_of(original_table, server_id, channel_id)
+            begin
+              original_table = check_original_table_existence_of(table_name, server_id)
+              table_decks = check_table_deck_existence_of(original_table, server_id, channel_id)
 
-                synchronize(RECORD_MESSAGE) do
-                  ApplicationRecord.connection_pool.with_connection do
-                    if table_decks.empty?
-                      raise(TableDeckNotFound, original_table)
-                    else
-                      table_deck = table_decks.first
-                      result.header = table_deck.channel_id == 0 ? 'サーバ共通' : 'チャンネル限定'
-                      result.messages = Array.new(count).map do
-                        table_deck.drow(true)
-                      end
+              synchronize(RECORD_MESSAGE) do
+                ApplicationRecord.connection_pool.with_connection do
+                  if table_decks.empty?
+                    raise(TableDeckNotFound, original_table)
+                  else
+                    table_deck = table_decks.first
+                    result.header = table_deck.channel_id == 0 ? 'サーバ共通' : 'チャンネル限定'
+                    result.messages = Array.new(count).map do
+                      table_deck.drow(true)
                     end
                   end
                 end
-
-                if result.messages.include?(nil)
-                  result.messages.compact << '山札にカードが残っていません'
-                end
-              rescue OriginalTableNotFound => not_found_error
-                "オリジナル表「#{not_found_error.table}」が見つかりません"
-              rescue TableDeckNotFound => not_found_error
-                "山札「#{not_found_error.table}」が見つかりません"
-              rescue => e
-                log_exception(e)
-                '原因不明のエラーが発生しました'
               end
+            rescue OriginalTableNotFound => not_found_error
+              "オリジナル表「#{not_found_error.table}」が見つかりません"
+            rescue TableDeckNotFound => not_found_error
+              "山札「#{not_found_error.table}」が見つかりません"
+            rescue => e
+              log_exception(e)
+              '原因不明のエラーが発生しました'
+            end
+
+
+            if result.messages.include?(nil)
+              result.messages =
+                result.messages.compact << '山札にカードが残っていません'
+            end
 
             result
           end
@@ -113,7 +114,7 @@ module Cd2c
 
             result.messages =
               begin
-                original_table = check_original_table_existence_of(table_name)
+                original_table = check_original_table_existence_of(table_name, server_id)
 
                 synchronize(RECORD_MESSAGE) do
                   ApplicationRecord.connection_pool.with_connection do
@@ -121,7 +122,7 @@ module Cd2c
                       TableDeck.
                         find_by(
                           original_table: original_table,
-                          chat_system: ChatSystem.find_by(name: :discord),
+                          chat_system: ChatSystem.find_by(name: @adapter_target),
                           server_id: server_id,
                           channel_id: channel_id
                         )
@@ -153,23 +154,24 @@ module Cd2c
           # @return [OriginalTable] 表が存在する場合
           # @raise [OriginalTableNotFound] 表が存在しない場合
           def check_original_table_existence_of(table_name, server_id)
-            table = nil
+            tables = nil
 
             synchronize(RECORD_MESSAGE) do
               ApplicationRecord.connection_pool.with_connection do
-                users = ChatSystemLink.
-                  where(chat_system_id: 1).
+                users = ChatSystem.
+                  find_by(name: @adapter_target).
+                  chat_system_links.
                   where(server_id: server_id).
                   pluck(:user_id)
-                table = OriginalTable.
+                tables = OriginalTable.
                   where(user_id: users).
-                  find_by(name: table_name)
+                  where(name: table_name)
               end
             end
 
-            raise(OriginalTableNotFound, table_name) unless table
+            raise(OriginalTableNotFound, table_name) if tables.size < 1
 
-            table
+            tables.first
           end
 
           # そのチャンネルで使用可能な山札が存在することを確かめる
@@ -187,13 +189,9 @@ module Cd2c
                   TableDeck.
                     where(
                       original_table: original_table,
-                      chat_system: ChatSystem.find_by(name: :discord),
-                      server_id: server_id
-                    ).
-                    merge(
-                      TableDeck.
-                        where(channel_id: channel_id).
-                        or(TableDeck.where(channel_id: 0))
+                      chat_system: ChatSystem.find_by(name: @adapter_target),
+                      server_id: server_id,
+                      channel_id: [0, channel_id]
                     ).
                     order(channel_id: :desc)
 

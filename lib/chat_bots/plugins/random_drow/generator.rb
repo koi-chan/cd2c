@@ -27,22 +27,23 @@ module Cd2c
           # @return [OriginalTable] 表が存在する場合
           # @raise [TableNotFound] 表が存在しない場合
           def check_existence_of(table_name, server_id)
-            table = nil
+            tables = nil
             synchronize(RECORD_MESSAGE) do
               ApplicationRecord.connection_pool.with_connection do
-                users = ChatSystemLink.
-                  where(chat_system_id: 1).
+                users = ChatSystem.
+                  find_by(name: @adapter_target).
+                  chat_system_links.
                   where(server_id: server_id).
                   pluck(:user_id)
-                table = OriginalTable.
+                tables = OriginalTable.
                   where(user_id: users).
-                  find_by(name: table_name)
+                  where(name: table_name)
               end
             end
 
             fail(TableNotFound, table_name) if tables.size < 1
 
-            table
+            tables.first
           end
         end
       end

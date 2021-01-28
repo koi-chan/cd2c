@@ -3,7 +3,7 @@ class OriginalTablesController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @original_tables = OriginalTable.all
+    @original_tables = OriginalTable.public?(current_user.id)
   end
 
   def new
@@ -72,12 +72,12 @@ class OriginalTablesController < ApplicationController
   def params_for_create
     params.
       require(:original_table).
-      permit(:name, :definition)
+      permit(:name, :definition, :public)
   end
 
   def params_for_update
     params.
       require(:original_table).
-      permit(:definition)
+      permit(:definition, :public)
   end
 end

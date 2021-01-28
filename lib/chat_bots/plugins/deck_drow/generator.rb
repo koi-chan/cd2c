@@ -25,7 +25,7 @@ module Cd2c
 
             result.messages =
               begin
-                original_table = check_original_table_existence_of(table_name)
+                original_table = check_original_table_existence_of(table_name, server_id)
 
                 synchronize(RECORD_MESSAGE) do
                   ApplicationRecord.connection_pool.with_connection do
@@ -152,12 +152,18 @@ module Cd2c
           # @param [String] table_name 表名
           # @return [OriginalTable] 表が存在する場合
           # @raise [OriginalTableNotFound] 表が存在しない場合
-          def check_original_table_existence_of(table_name)
+          def check_original_table_existence_of(table_name, server_id)
             table = nil
 
             synchronize(RECORD_MESSAGE) do
               ApplicationRecord.connection_pool.with_connection do
-                table = OriginalTable.find_by(name: table_name)
+                users = ChatSystemLink.
+                  where(chat_system_id: 1).
+                  where(server_id: server_id).
+                  pluck(:user_id)
+                table = OriginalTable.
+                  where(user_id: users).
+                  find_by(name: table_name)
               end
             end
 

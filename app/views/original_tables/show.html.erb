@@ -20,6 +20,10 @@
                 <td><%= @original_table.user.username %></td>
               </tr>
               <tr>
+                <th>公開状態</th>
+                <td><%= @original_table.public ? '公開中' : '非公開' %></td>
+              </tr>
+              <tr>
                 <th>作成日</th>
                 <td><%= @original_table.created_at %></td>
               </tr>

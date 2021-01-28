@@ -10,6 +10,12 @@
   </div>
 
   <div class="form-group">
+    <%= f.label(:public) %>
+    <%= f.check_box(:public, class: 'form-control') %>
+    <p class="help-block">他の利用者にも使用可能にするにはチェックを入れてください。</p>
+  </div>
+
+  <div class="form-group">
     <%= f.label(:definition) %>
     <%= f.text_area(:definition, class: 'form-control', rows: 10, required: true) %>
     <p class="help-block">1行に表の1項目を書いてください。</p>

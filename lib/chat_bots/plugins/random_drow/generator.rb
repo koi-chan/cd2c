@@ -14,8 +14,8 @@ module Cd2c
           # @param [String] table_name 表名
           # @return [String]
           # @raise [TableNotFound] 表が見つからなかった場合
-          def random_drow(table_name)
-            table = check_existence_of(table_name)
+          def random_drow(table_name, server_id)
+            table = check_existence_of(table_name, server_id)
 
             table.drow
           end
@@ -26,17 +26,23 @@ module Cd2c
           # @param [String] table_name 表名
           # @return [OriginalTable] 表が存在する場合
           # @raise [TableNotFound] 表が存在しない場合
-          def check_existence_of(table_name)
-            tables = []
+          def check_existence_of(table_name, server_id)
+            table = nil
             synchronize(RECORD_MESSAGE) do
               ApplicationRecord.connection_pool.with_connection do
-                tables = OriginalTable.where(name: table_name)
+                users = ChatSystemLink.
+                  where(chat_system_id: 1).
+                  where(server_id: server_id).
+                  pluck(:user_id)
+                table = OriginalTable.
+                  where(user_id: users).
+                  find_by(name: table_name)
               end
             end
 
             fail(TableNotFound, table_name) if tables.size < 1
 
-            tables.first
+            table
           end
         end
       end

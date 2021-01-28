@@ -31,7 +31,7 @@ module Cd2c
 
             messages = table_names.split(' ').map do |table|
               begin
-                @generator.random_drow(table).
+                @generator.random_drow(table, m.server.id).
                   split($/).
                   map { |line| "<#{table}>: #{line}" }
               rescue TableNotFound => not_found_error

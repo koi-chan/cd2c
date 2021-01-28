@@ -7,4 +7,5 @@ class User < ApplicationRecord
 
   has_many :chat_system_authentication_tokens
   has_many :chat_system_links
+  has_many :original_tables
 end

@@ -1,6 +1,5 @@
 class ChatSystemAuthenticationTokensController < ApplicationController
   before_action :require_sign_in
-  before_action :authenticate_user!
 
   def new
     @token_record = ChatSystemAuthenticationToken.new

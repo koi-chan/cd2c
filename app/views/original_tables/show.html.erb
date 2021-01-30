@@ -36,17 +36,29 @@
 
           <h2>表の中身</h2>
           <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>番号</th>
+                <th>項目</th>
+              </tr>
+            </thead>
             <tbody>
+              <% i = 0 %>
               <% @original_table.elements.each do |element| %>
-                <tr><td><%= element %></td></tr>
+                <tr>
+                  <td><%= i += 1 %></td>
+                  <td><%= element %></td>
+                </tr>
               <% end %>
             </tbody>
           </table>
 
-          <p>
-            <%= link_to('編集', edit_original_table_path, class: 'btn btn-responsible btn-default') %>
-            <%= link_to('削除', original_table_path, method: :delete, class: 'btn btn-responsible btn-default') %>
-          </p>
+          <% if(@original_table.user == current_user) %>
+            <p>
+              <%= link_to('編集', edit_original_table_path, class: 'btn btn-responsible btn-default') %>
+              <%= link_to('削除', original_table_path, method: :delete, class: 'btn btn-responsible btn-default') %>
+            </p>
+          <% end %>
         </div>
       </div>
     </div>

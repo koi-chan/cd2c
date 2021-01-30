@@ -1,9 +1,8 @@
 class OriginalTablesController < ApplicationController
-  before_action :require_sign_in
-  before_action :authenticate_user!
+  before_action :require_sign_in, only: %i(new create edit update destroy)
 
   def index
-    @original_tables = OriginalTable.public?(current_user.id)
+    @original_tables = OriginalTable.public?(current_user&.id)
   end
 
   def new
@@ -33,6 +32,11 @@ class OriginalTablesController < ApplicationController
 
   def show
     @original_table = OriginalTable.find(params[:id])
+
+    unless(@original_table.public || @original_table.user == current_user)
+      flash[:abort] = t('views.flash.show_original_table_can_author_only')
+      redirect_to(original_tables_path)
+    end
   end
 
   def update

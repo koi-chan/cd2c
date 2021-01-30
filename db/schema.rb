@@ -10,7 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_28_042323) do
+ActiveRecord::Schema.define(version: 2021_01_30_153800) do
+
+  create_table "chat_system_authentication_mails", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "token", null: false
+    t.bigint "chat_system_id", null: false
+    t.bigint "server_id", null: false
+    t.bigint "account_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["chat_system_id"], name: "index_chat_system_authentication_mails_on_chat_system_id"
+    t.index ["user_id"], name: "index_chat_system_authentication_mails_on_user_id"
+  end
 
   create_table "chat_system_authentication_tokens", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -84,6 +96,8 @@ ActiveRecord::Schema.define(version: 2021_01_28_042323) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "chat_system_authentication_mails", "chat_systems"
+  add_foreign_key "chat_system_authentication_mails", "users"
   add_foreign_key "chat_system_authentication_tokens", "users"
   add_foreign_key "chat_system_links", "chat_systems"
   add_foreign_key "chat_system_links", "users"

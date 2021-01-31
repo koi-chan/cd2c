@@ -31,7 +31,7 @@ module Cd2c
                 message = "#{message}指定されたトークンが存在しません"
               else
                 authentication_account_with_token(m, matched_token)
-                message = "#{message}アカウント連携が完了しました"
+                message = "#{message}トークンを確認しました。登録メールアドレス宛てに送信したメールをご覧いただき、連携を完了させてください。"
               end
             rescue ActiveRecord::RecordInvalid => e
               log(e.record.errors.to_s, :warn)
@@ -73,7 +73,7 @@ module Cd2c
           # @param [ChatSystemAuthenticationToken] token
           # @return [void]
           def authentication_account_with_token(m, token)
-            link = ChatSystemLink.new
+            link = ChatSystemAuthenticationMail.new
             link.user = token.user
             link.server_id = m.server.id
             link.account_id = m.user.id
@@ -83,6 +83,7 @@ module Cd2c
               ApplicationRecord.connection_pool.with_connection do
                 ApplicationRecord.transaction do
                   link.save!
+                  ChatSystemAuthenticationTokenAcceptMailer.send_confirm_to_user(link).deliver
                   token.destroy!
                 end
               end

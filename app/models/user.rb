@@ -6,6 +6,7 @@ class User < ApplicationRecord
          :trackable, :confirmable
 
   has_many :chat_system_authentication_tokens
+  has_many :chat_system_authentication_mails
   has_many :chat_system_links
   has_many :original_tables
 end

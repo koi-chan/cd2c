@@ -1,0 +1,11 @@
+<%= @link.user.username %>
+
+以下のチャット環境と連携するトークンが使用されました。
+
+チャット環境: <%= @link.chat_system.name %>
+サーバ　　　: <%= @link.server %>
+アカウント名: <%= @link.account %>
+
+あなたご自身の操作でしたら、次のURLを開いて連携を完了させてください。
+
+<%= chat_system_links_url(@link.token) %>

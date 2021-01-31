@@ -18,6 +18,8 @@ class ChatSystemAuthenticationToken < ApplicationRecord
 
     tokens = tokens.where(token: token) unless token.nil?
     tokens = tokens.where(user_id: user_id) unless user_id.nil?
+
+    tokens
   end
 
   # トークンの有効期限

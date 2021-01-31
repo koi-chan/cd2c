@@ -46,4 +46,27 @@
   </tbody>
 </table>
 <%= link_to('連携用トークンを生成する', new_chat_system_authentication_token_path) %>
+
+<h2>有効なメール認証用トークン</h2>
+<table>
+  <thead>
+    <tr>
+      <th>チャット環境</th>
+      <th>トークン</th>
+      <th>有効期限</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @user.chat_system_authentication_mails.each do |token| %>
+      <tr>
+        <td><%= token.chat_system.name %></td>
+        <td><input type="text" value="<%= token.token %>"></td>
+        <td><%= token.expire_at %></td>
+        <td><%= link_to('削除', chat_system_authentication_mail_path(token), method: :delete) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
 <%= render('shared/description_token') %>

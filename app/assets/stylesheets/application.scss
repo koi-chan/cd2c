@@ -19,4 +19,8 @@ $fa-font-path: '@fortawesome/fontawesome-free/webfonts';
 @import '@fortawesome/fontawesome-free/scss/solid';
 @import '@fortawesome/fontawesome-free/scss/brands';
 
+@import 'bootswatch/dist/darkly/variables';
 @import 'bootstrap/scss/bootstrap';
+@import 'bootswatch/dist/darkly/bootswatch';
+
+@import 'custom';

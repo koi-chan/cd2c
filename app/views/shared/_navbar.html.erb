@@ -1,41 +1,30 @@
-<nav id="navbar" class="navbar navbar-default navbar-static-top">
+<nav id="navbar" class="navbar navbar-expand-md navbar-static-top bg-light navbar-light">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
       <a class="navbar-brand" href="<%= root_path %>">CD2C - Card Deck Create and Drow for Chat</a>
+
+      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#bs-navbar-collapse-1" aria-controls="bs-navbar-collapse-1" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
     </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li>a</li>
-        <li>b</li>
+    <div id="bs-navbar-collapse-1" class="collapse navbar-collapse justify-content-end">
+      <ul class="navbar-nav">
         <% if current_user %>
-          <li>c</li>
-        <% end %>
-      </ul>
-
-      <ul class="nav navbar-nav navbar-right">
-        <% if current_user %>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%= current_user.email %> <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><%= link_to('利用者情報の編集', edit_user_registration_path) %></li>
-              <li role="separator" class="divider"></li>
-              <li><%= link_to('ログアウト', destroy_user_session_path, method: :delete) %></li>
-            </ul>
+          <li class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%= current_user.username %> <span class="caret"></span></a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item"><%= link_to('マイページ', mypage_index_path) %></a>
+              <a class="dropdown-item"><%= link_to('利用者情報の編集', edit_user_registration_path) %></a>
+              <a class="dropdown-item"><%= link_to('ログアウト', destroy_user_session_path, method: :delete) %></a>
+            </div>
           </li>
         <% else %>
-          <li><%= link_to('ログイン', new_user_session_path) %></li>
-          <li><%= link_to('登録', new_user_registration_path) %></li>
+          <li class="nav-item"><%= link_to('ログイン', new_user_session_path, class: 'nav-link') %></li>
+          <li class="nav-item active"><%= link_to('新規登録', new_user_registration_path, class: 'nav-link') %></li>
         <% end %>
       </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+    </div>
+  </div>
 </nav>

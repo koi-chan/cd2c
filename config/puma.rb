@@ -51,7 +51,7 @@ pidfile File.expand_path('../../tmp/pids/puma.pid', __FILE__)
 # Workers do not work on JRuby or Windows (both of which do not support
 # processes).
 #
-unless ENV.fetch("RAILS_ENV", "development") == "development"
+if ENV.fetch("RAILS_ENV", "development") == "production"
   workers ENV.fetch("WEB_CONCURRENCY") { 3 }
 end
 

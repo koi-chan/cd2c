@@ -1,7 +1,6 @@
 internal_locale: en
-base_locale: en
+base_locale: ja
 locales:
-- en
 - ja
 data:
   adapter: I18n::Tasks::Data::FileSystem

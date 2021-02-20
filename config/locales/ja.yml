@@ -1,0 +1,34 @@
+---
+ja:
+  activerecord:
+    models:
+      user: 'ユーザー'
+      original_table: 'オリジナル表'
+      chat_system_authentication_token: 'チャットシステム連携トークン'
+    attributes:
+      original_table:
+        name: '表名'
+        public: '公開状態'
+        definition: '定義'
+      chat_system_authentication_token:
+        chat_system_id: 'チャットシステム'
+  errors:
+    messages:
+      not_saved: '保存に失敗しました'
+  views:
+    error:
+    flash:
+      added_chat_system_link: 'チャットシステムとの連携が完了しました'
+      added_chat_system_authentication_token: 'チャットシステム連携用トークンを生成しました'
+      added_original_table: 'オリジナル表を作成しました'
+      deleted_chat_system_authentication_mail: 'チャットシステム連携メール認証トークンを削除しました'
+      deleted_chat_system_authentication_token: 'チャットシステム連携用トークンを削除しました'
+      deleted_original_table: 'オリジナル表を削除しました'
+      edit_original_table_can_author_only: 'オリジナル表は作者のみ編集出来ます'
+      show_original_table_can_author_only: 'このオリジナル表は作者のみ編集出来ます'
+      updated_original_table: 'オリジナル表への編集を完了しました'
+  helpers:
+    submit:
+      create: '作成'
+      update: '更新'
+      submit: '保存'

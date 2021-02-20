@@ -55,8 +55,8 @@
 
           <% if(@original_table.user == current_user) %>
             <p>
-              <%= link_to('編集', edit_original_table_path, class: 'btn btn-responsible btn-default') %>
-              <%= link_to('削除', original_table_path, method: :delete, class: 'btn btn-responsible btn-default') %>
+              <%= link_to('編集', edit_original_table_path, class: 'btn btn-responsible btn-success') %>
+              <%= link_to('削除', original_table_path, method: :delete, class: 'btn btn-responsible btn-danger') %>
             </p>
           <% end %>
         </div>

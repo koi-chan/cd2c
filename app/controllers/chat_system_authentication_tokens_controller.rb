@@ -11,7 +11,7 @@ class ChatSystemAuthenticationTokensController < ApplicationController
     @token_record.user = current_user
 
     if @token_record.save
-      flash[:success] = t('views.flash.added_original_table')
+      flash[:success] = t('views.flash.added_chat_system_authentication_token')
       redirect_to(mypage_index_path)
     else
       render(:new)

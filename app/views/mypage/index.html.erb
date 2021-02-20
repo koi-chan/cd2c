@@ -3,6 +3,8 @@
     <div class="col-xs-12 col-md-12 col-md-offset-2">
       <div class="main-panel">
         <div class="panel-body">
+          <%= render('shared/flash') %>
+
           <h2>マイページ</h2>
           <p>ユーザー名: <%= @user.username %></p>
           <p>メールアドレス: <%= @user.email %></p>

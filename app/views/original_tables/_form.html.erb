@@ -1,24 +1,24 @@
 <%= form_for(@original_table) do |f| %>
   <div class="form-group">
+    <%= f.label(:name, for: 'inputName') %>
     <% if name_changeable %>
-      <%= f.label(:name) %>
-      <%= f.text_field(:name, class: 'form-control', required: true) %>
+      <%= f.text_field(:name, class: 'form-control', required: true, id: 'inputName') %>
     <% else %>
-      <label><%= t('activerecord.attributes.original_table.name') %></label>
-      <p><%= @original_table.name %></p>
+      <%= f.text_field(:name, class: 'form-control-plaintext', readonly: true, id: 'inputName', 'aria-describedby': 'nameHelpBlock') %>
+      <div class="form-text" id="nameHelpBlock">表の名前を変更することは出来ません。</div>
     <% end %>
   </div>
 
-  <div class="form-group">
-    <%= f.label(:public) %>
-    <%= f.check_box(:public, class: 'form-control') %>
-    <p class="help-block">他の利用者にも使用可能にするにはチェックを入れてください。</p>
+  <div class="form-check">
+    <%= f.check_box(:public, class: 'form-check-input', id: 'checkPublic') %>
+    <%= f.label(:public, class: 'form-check-label', for: 'checkPublic', 'aria-descrivedby': 'publicHelpBlock') %>
+    <div class="form-text" id="publicHelpBlock">他の利用者にも使用可能にするにはチェックを入れてください。</div>
   </div>
 
   <div class="form-group">
-    <%= f.label(:definition) %>
-    <%= f.text_area(:definition, class: 'form-control', rows: 10, required: true) %>
-    <p class="help-block">1行に表の1項目を書いてください。</p>
+    <%= f.label(:definition, for: 'textDefinition') %>
+    <%= f.text_area(:definition, class: 'form-control', rows: 10, required: true, id: 'textDefinition', 'aria-describedby': 'definitionHelpBlock') %>
+    <div class="form-text" id="definitionHelpBlock">1行に表の1項目を書いてください。</div>
   </div>
 
   <div class="form-group">
